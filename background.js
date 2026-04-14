@@ -9,12 +9,12 @@ let offscreenCreationPromise = null;
 
 chrome.runtime.onInstalled.addListener(async () => {
   await ensureDefaultSettings();
-  await ensureGithubMonitorOnOpenTabs();
+  await ensureMonitorsOnOpenTabs();
 });
 
 chrome.runtime.onStartup.addListener(async () => {
   await ensureDefaultSettings();
-  await ensureGithubMonitorOnOpenTabs();
+  await ensureMonitorsOnOpenTabs();
 });
 
 chrome.action.onClicked.addListener(async () => {
@@ -278,6 +278,10 @@ async function ensureDefaultSettings() {
   }
 }
 
+async function ensureMonitorsOnOpenTabs() {
+  await Promise.all([ensureGithubMonitorOnOpenTabs(), ensureJenkinsMonitorOnOpenTabs()]);
+}
+
 async function ensureGithubMonitorOnOpenTabs() {
   const tabs = await chrome.tabs.query({
     url: ['https://github.com/*'],
@@ -294,6 +298,27 @@ async function ensureGithubMonitorOnOpenTabs() {
           })
           .catch((error) => {
             console.warn(`Unable to attach GitHub monitor to tab ${tab.id}:`, error);
+          }),
+      ),
+  );
+}
+
+async function ensureJenkinsMonitorOnOpenTabs() {
+  const tabs = await chrome.tabs.query({
+    url: ['http://*/*', 'https://*/*'],
+  });
+
+  await Promise.all(
+    tabs
+      .filter((tab) => typeof tab.id === 'number' && !tab.url?.startsWith('https://github.com/'))
+      .map((tab) =>
+        chrome.scripting
+          .executeScript({
+            target: { tabId: tab.id },
+            files: ['jenkins-monitor.js'],
+          })
+          .catch((error) => {
+            console.warn(`Unable to attach Jenkins monitor to tab ${tab.id}:`, error);
           }),
       ),
   );
