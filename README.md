@@ -7,7 +7,6 @@ This project is intentionally DOM-only. It does not use GitHub or Jenkins APIs, 
 ## Features
 
 - Watches GitHub pull request pages for checks whose names start with `Validation`
-- Ignores `Validation / Schema & Annotations Check`
 - Notifies when watched validation checks finish, including failed or cancelled outcomes
 - Watches Jenkins pages and console output for completed build states
 - Opens the related tab when a notification is clicked
