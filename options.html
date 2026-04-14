@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PR & Jenkins Bell Notifier</title>
+    <link rel="stylesheet" href="options.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="hero">
+        <p class="eyebrow">DOM-only monitoring</p>
+        <h1>PR & Jenkins Bell Notifier</h1>
+        <p class="subtitle">
+          This version watches open GitHub PR tabs and open Jenkins pages directly from the DOM. No GitHub or Jenkins API calls, and no tokens.
+        </p>
+      </header>
+
+      <section class="card">
+        <h2>Settings</h2>
+        <label class="field">
+          <span>GitHub PR author to watch</span>
+          <input id="githubUsername" type="text" placeholder="hisaransh" spellcheck="false">
+        </label>
+        <div class="field checkbox">
+          <label>
+            <input id="soundEnabled" type="checkbox">
+            Play bell sound with notifications
+          </label>
+        </div>
+        <p class="hint">
+          Keep the relevant GitHub PR tab or Jenkins page open. The extension only looks at what those pages render in the browser, so it does not poll remote APIs in the background.
+        </p>
+      </section>
+
+      <section class="actions">
+        <button id="saveButton" class="primary" type="button">Save settings</button>
+        <button id="testSoundButton" type="button">Play bell</button>
+        <span id="flash" aria-live="polite"></span>
+      </section>
+
+      <section class="card">
+        <h2>Tracked tabs</h2>
+        <div class="status-grid">
+          <article class="status-panel">
+            <h3>GitHub</h3>
+            <p id="githubSummary" class="summary">Waiting for an open PR tab…</p>
+            <ul id="githubList" class="status-list"></ul>
+          </article>
+          <article class="status-panel">
+            <h3>Jenkins</h3>
+            <p id="jenkinsSummary" class="summary">Waiting for an open Jenkins page…</p>
+            <ul id="jenkinsList" class="status-list"></ul>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="options.js"></script>
+  </body>
+</html>
